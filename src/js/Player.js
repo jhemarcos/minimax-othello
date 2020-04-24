@@ -6,10 +6,10 @@ function Player(name, number, isIa, qtdPieces) {
     this.qtdPieces = qtdPieces ? qtdPieces : 2;
 
     if(this.isIa){
-        this.IA = new IA(this.color);
+        this.IA = new IA(this.number);
     }
 }
 
-Board.prototype.getMove = function(board) {
+Player.prototype.getMove = function(board) {
     return this.IA.move(board);
 }

@@ -1,22 +1,18 @@
 (function () {
     "use strict"
 
-    var players = [
-        new Player("Humano", 0, false),
-        new Player("IA", 1, true)
-    ];
-    var board = new Board(players);
+    var players, currentPlayer, board;
     var boardContainer = $(".boardContainer");
-    var currentPlayer = 0;
 
     startGame();
 
     function startGame() {
-        board = new Board(players);
         players = [
             new Player("Humano", 0, false),
             new Player("IA", 1, true)
         ];
+        currentPlayer = 0;
+        board = new Board(players);
         renderBoard(board.board);
     }
 
@@ -24,12 +20,12 @@
         boardContainer.empty();
 
         var table = "<table class='board'>";
-        for (var x = 0; x < board.length; ++x) {
+        for (var y = 0; y < board.length; ++y) {
             table += '<tr>';
-            for (var y = 0; y < board.length; ++y) {
+            for (var x = 0; x < board.length; ++x) {
                 var piece = board[x][y] ? board[x][y] : "";
 
-                table += '<td class="square '+piece+'" id=' + y + x + '><div></div></td>';
+                table += '<td class="square '+piece+'" id=' + x + y + '><div></div></td>';
             }
         }
         table += " </table>";
@@ -43,25 +39,31 @@
     function listenClicks() {
         $('.board .square').click(function () {
             var $this = $(this);
-            var y = parseInt($this.attr('id').charAt(0));
-            var x = parseInt($this.attr('id').charAt(1));
+            var x = parseInt($this.attr('id').charAt(0));
+            var y = parseInt($this.attr('id').charAt(1));
 
             proccessMove(x, y);
         });
     }
 
     function proccessMove(x, y) {
-        var valid = board.validMove(x, y, players[currentPlayer])
+        console.log("X: " + x + "Y: " + y);
+        var valid = board.validMove(x, y, currentPlayer)
 
         if(valid) {
             var otherPlayer = currentPlayer === 0 ? 1 : 0;
-            board.flip(x, y, players[currentPlayer], players[otherPlayer]);
+            board.flip(x, y, currentPlayer);
             renderBoard(board.board);
             currentPlayer = otherPlayer;
 
             if(players[currentPlayer].isIa) {
-                var move = players[currentPlayer].getMove();
-                proccessMove(x, y);
+                console.log(board.getAllValidMoves(currentPlayer));
+
+                setTimeout(function(){
+                    var move = players[currentPlayer].getMove(board);
+                    console.log("IA move", move);
+                    proccessMove(move.x, move.y);
+                }, 5000);
             }
         }
     }

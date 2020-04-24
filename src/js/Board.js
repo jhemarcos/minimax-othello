@@ -19,7 +19,7 @@ Board.prototype.generateBoard = function() {
 
 Board.prototype.startBoard = function(existentBoard) {
     if(existentBoard) {
-
+        this.board = existentBoard;
     } else {
         this.board[3][3] = this.players[0].color;
         this.board[4][4] = this.players[0].color;
@@ -215,6 +215,10 @@ Board.prototype.searchDownRight = function(x, y, player) {
 Board.prototype.getOpponentPieces = function(x, y, player) {
     var pieces = [];
 
+    if(this.board[x][y]) {
+        return [];
+    }
+
     var up = this.searchUp(x, y, player);
     pieces = pieces.concat(up ? up : []);
     var down = this.searchDown(x, y, player);
@@ -238,7 +242,7 @@ Board.prototype.getOpponentPieces = function(x, y, player) {
 Board.prototype.copy = function() {
     var tempPlayers = [];
     for (var i = this.players.length - 1; i >= 0; i--) {
-      tempPlayers[i] = new Player(this.players[i].nome, this.players[i].number, this.players[i].isIa, this.players[i].qtdPieces);
+      tempPlayers[i] = new Player(this.players[i].name, this.players[i].number, this.players[i].isIa, this.players[i].qtdPieces);
     };
 
     var tempBoard = [];
@@ -249,16 +253,18 @@ Board.prototype.copy = function() {
     return new Board(tempPlayers, tempBoard);
   }
 
-Board.prototype.validMove = function(x, y, player) {
+Board.prototype.validMove = function(x, y, currentPlayer) {
+    var player = this.getPlayer(currentPlayer);
+
     return this.getOpponentPieces(x, y, player).length !== 0;
 }
 
-Board.prototype.getAllValidMoves = function(player) {
+Board.prototype.getAllValidMoves = function(currentPlayer) {
     var validMoves = [];
 
     for (var x = 0; x < this.size; x++) {
         for (var y = 0; y < this.size; y++) {
-            if(this.validMove(x, y, player)) {
+            if(this.validMove(x, y, currentPlayer)) {
                 validMoves.push({x: x, y: y});
             }
         }
@@ -267,7 +273,10 @@ Board.prototype.getAllValidMoves = function(player) {
     return validMoves;
 }
 
-Board.prototype.flip = function(x, y, player, otherPlayer) {
+Board.prototype.flip = function(x, y, currentPlayer) {
+    var player = this.getPlayer(currentPlayer);
+    var otherPlayer = this.getPlayer(currentPlayer, true);
+
     var pieces = this.getOpponentPieces(x, y, player)
 
     for (var i = 0; i < pieces.length; i++) {
@@ -279,4 +288,16 @@ Board.prototype.flip = function(x, y, player, otherPlayer) {
 
     player.qtdPieces += pieces.length + 1;
     otherPlayer.qtdPieces -= pieces.length;
+}
+
+Board.prototype.getPlayer = function(currentPlayer, opp) {
+    var player;
+
+    if(!opp) {
+        player = this.players[currentPlayer]
+    } else {
+        player = this.players[currentPlayer ? 0 : 1]
+    }
+
+    return player;
 }
