@@ -7,12 +7,17 @@
     ];
     var board = new Board(players);
     var boardContainer = $(".boardContainer");
+    var currentPlayer = 0;
 
     startGame();
 
     function startGame() {
+        board = new Board(players);
+        players = [
+            new Player("Humano", 0, false),
+            new Player("IA", 1, true)
+        ];
         renderBoard(board.board);
-        console.log(board.getAllValidMoves(players[0]));
     }
 
     function renderBoard(board) {
@@ -35,15 +40,16 @@
     function listenClicks() {
         $('.board .square').click(function () {
             var $this = $(this);
-            var x = $this.attr('id').charAt(0)
-            var y = $this.attr('id').charAt(1)
+            var y = parseInt($this.attr('id').charAt(0));
+            var x = parseInt($this.attr('id').charAt(1));
 
-            console.log("X: " + x + " Y: " + y);
+            var valid = board.validMove(x, y, players[currentPlayer])
 
-            console.log(board.getOpponentPieces(x, y, players[0]));
-    
-            //Verificar se o movimento é valido
-            //Virar as peças do adversário
+            if(valid) {
+                board.flip(x, y, players[currentPlayer]);
+                renderBoard(board.board);
+                currentPlayer = currentPlayer === 0 ? 1 : 0;
+            }
         });
     }
     

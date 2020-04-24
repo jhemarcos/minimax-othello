@@ -248,3 +248,14 @@ Board.prototype.getAllValidMoves = function(player) {
 
     return validMoves;
 }
+
+Board.prototype.flip = function(x, y, player) {
+    var pieces = this.getOpponentPieces(x, y, player)
+
+    for (var i = 0; i < pieces.length; i++) {
+        var piece = pieces[i];
+
+        this.board[piece.x][piece.y] = player.color;
+    }
+    this.board[x][y] = player.color;
+}
