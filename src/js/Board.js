@@ -1,5 +1,5 @@
 function Board(players, existentBoard) {
-    this.size = 8;
+    this.size = 4;
     this.players = players;
   
     this.generateBoard();
@@ -21,10 +21,13 @@ Board.prototype.startBoard = function(existentBoard) {
     if(existentBoard) {
         this.board = existentBoard;
     } else {
-        this.board[3][3] = this.players[0].color;
-        this.board[4][4] = this.players[0].color;
-        this.board[4][3] = this.players[1].color;
-        this.board[3][4] = this.players[1].color;
+        var floor = Math.round((this.size/2)-1);
+        var round =  Math.round((this.size/2));
+
+        this.board[floor][floor] = this.players[0].color;
+        this.board[round][round] = this.players[0].color;
+        this.board[round][floor] = this.players[1].color;
+        this.board[floor][round] = this.players[1].color;
     }
 }
 
@@ -47,7 +50,7 @@ Board.prototype.searchUp = function(x, y, player) {
         y--;
     }
 
-    return pieces;
+    return [];
 }
 
 Board.prototype.searchDown = function(x, y, player) {
@@ -62,14 +65,15 @@ Board.prototype.searchDown = function(x, y, player) {
             if(pieces.length === 0){
                 return false;
             } else {
+                //console.log("currentSquare", x, y, initialX, initialY, this.board[x][y]);
                 return pieces;
             }
         }
         pieces.push({x: x, y: y});
         y++;
     }
-
-    return pieces;
+    
+    return [];
 }
 
 Board.prototype.searchLeft = function(x, y, player) {
@@ -91,7 +95,7 @@ Board.prototype.searchLeft = function(x, y, player) {
         x--;
     }
 
-    return pieces;
+    return [];
 }
 
 Board.prototype.searchRight = function(x, y, player) {
@@ -113,7 +117,7 @@ Board.prototype.searchRight = function(x, y, player) {
         x++;
     }
 
-    return pieces;
+    return [];
 }
 
 Board.prototype.searchUpLeft = function(x, y, player) {
@@ -137,7 +141,7 @@ Board.prototype.searchUpLeft = function(x, y, player) {
         y--;
     }
 
-    return pieces;
+    return [];
 }
 
 Board.prototype.searchUpRight = function(x, y, player) {
@@ -161,7 +165,7 @@ Board.prototype.searchUpRight = function(x, y, player) {
         y--;
     }
 
-    return pieces;
+    return [];
 }
 
 Board.prototype.searchDownLeft = function(x, y, player) {
@@ -185,7 +189,7 @@ Board.prototype.searchDownLeft = function(x, y, player) {
         y++;
     }
 
-    return pieces;
+    return [];
 }
 
 Board.prototype.searchDownRight = function(x, y, player) {
@@ -209,7 +213,7 @@ Board.prototype.searchDownRight = function(x, y, player) {
         y++;
     }
 
-    return pieces;
+    return [];
 }
 
 Board.prototype.getOpponentPieces = function(x, y, player) {

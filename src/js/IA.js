@@ -1,6 +1,6 @@
 function IA(currentPlayer) {
     this.currentPlayer = currentPlayer;
-    this.maxDepth = 1;
+    this.maxDepth = 3;
 }
   
 IA.prototype.move = function(board) {
@@ -15,7 +15,7 @@ IA.prototype.minimax = function(board, depth, currentPlayer, maxDepth, alpha, be
     var bestMove;
     var moves = board.getAllValidMoves(currentPlayer);
 
-    console.log("Call depth " + depth + " for player " + currentPlayer, moves);
+    //console.log("Call depth " + depth + " for player " + currentPlayer, moves);
     if(depth >= maxDepth || moves.length === 0){
         var he = this.mobility(board, currentPlayer);
         return he;
@@ -26,7 +26,6 @@ IA.prototype.minimax = function(board, depth, currentPlayer, maxDepth, alpha, be
             move = moves[i];
             newBoard = board.copy();
             this.doMove(newBoard, move, currentPlayer);
-            //console.log(move);console.log(newBoard);return;
             score = this.minimax(newBoard, (depth + 1), (currentPlayer ? 0 : 1), maxDepth, alpha, beta);
             move.score = score;
             if(score > alpha){
@@ -66,12 +65,8 @@ IA.prototype.doMove = function(board, move, currentPlayer) {
     board.flip(move.x, move.y, currentPlayer);
 }
 IA.prototype.mobility = function(board, currentPlayer) {
-    // var aiMoves = board.getAllValidMoves(currentPlayer).length;
-    // var oppMoves = board.getAllValidMoves(currentPlayer ? 0 : 1).length;
-    // return Math.ceil((oppMoves + aiMoves) === 0 ? 0 : 100 * ((aiMoves - oppMoves)/(aiMoves + oppMoves)));
     var aiMoves = board.getAllValidMoves(currentPlayer).length;
     var oppMoves = board.getAllValidMoves(currentPlayer ? 0 : 1).length;
-
-    return aiMoves - (oppMoves -1);
+    return Math.ceil((oppMoves + aiMoves) === 0 ? 0 : 100 * ((aiMoves - oppMoves)/(aiMoves + oppMoves)));
 }
   
