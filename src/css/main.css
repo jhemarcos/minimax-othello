@@ -40,3 +40,9 @@ body {
     border: none;
     outline: none;
 }
+
+.game-controls .score {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 0;
+}

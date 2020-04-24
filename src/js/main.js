@@ -35,6 +35,9 @@
         table += " </table>";
         boardContainer.append(table);
         listenClicks();
+
+        $("#score1").text(players[0].qtdPieces);
+        $("#score2").text(players[1].qtdPieces);
     }
 
     function listenClicks() {
@@ -43,14 +46,24 @@
             var y = parseInt($this.attr('id').charAt(0));
             var x = parseInt($this.attr('id').charAt(1));
 
-            var valid = board.validMove(x, y, players[currentPlayer])
-
-            if(valid) {
-                board.flip(x, y, players[currentPlayer]);
-                renderBoard(board.board);
-                currentPlayer = currentPlayer === 0 ? 1 : 0;
-            }
+            proccessMove(x, y);
         });
+    }
+
+    function proccessMove(x, y) {
+        var valid = board.validMove(x, y, players[currentPlayer])
+
+        if(valid) {
+            var otherPlayer = currentPlayer === 0 ? 1 : 0;
+            board.flip(x, y, players[currentPlayer], players[otherPlayer]);
+            renderBoard(board.board);
+            currentPlayer = otherPlayer;
+
+            if(players[currentPlayer].isIa) {
+                var move = players[currentPlayer].getMove();
+                proccessMove(x, y);
+            }
+        }
     }
     
     $("#restartButton").click(function () {

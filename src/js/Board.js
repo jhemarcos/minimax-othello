@@ -1,9 +1,9 @@
-function Board(players) {
+function Board(players, existentBoard) {
     this.size = 8;
     this.players = players;
   
     this.generateBoard();
-    this.startBoard();
+    this.startBoard(existentBoard);
 }
 
 Board.prototype.generateBoard = function() {
@@ -17,11 +17,15 @@ Board.prototype.generateBoard = function() {
     this.board = board;
 }
 
-Board.prototype.startBoard = function() {
-    this.board[3][3] = this.players[0].color;
-    this.board[4][4] = this.players[0].color;
-    this.board[4][3] = this.players[1].color;
-    this.board[3][4] = this.players[1].color;
+Board.prototype.startBoard = function(existentBoard) {
+    if(existentBoard) {
+
+    } else {
+        this.board[3][3] = this.players[0].color;
+        this.board[4][4] = this.players[0].color;
+        this.board[4][3] = this.players[1].color;
+        this.board[3][4] = this.players[1].color;
+    }
 }
 
 Board.prototype.searchUp = function(x, y, player) {
@@ -231,6 +235,20 @@ Board.prototype.getOpponentPieces = function(x, y, player) {
     return pieces;
 }
 
+Board.prototype.copy = function() {
+    var tempPlayers = [];
+    for (var i = this.players.length - 1; i >= 0; i--) {
+      tempPlayers[i] = new Player(this.players[i].nome, this.players[i].number, this.players[i].isIa, this.players[i].qtdPieces);
+    };
+
+    var tempBoard = [];
+    for (var i = 0; i < this.board.length; i++) {
+        tempBoard[i] = this.board[i].slice();
+    }
+    
+    return new Board(tempPlayers, tempBoard);
+  }
+
 Board.prototype.validMove = function(x, y, player) {
     return this.getOpponentPieces(x, y, player).length !== 0;
 }
@@ -249,7 +267,7 @@ Board.prototype.getAllValidMoves = function(player) {
     return validMoves;
 }
 
-Board.prototype.flip = function(x, y, player) {
+Board.prototype.flip = function(x, y, player, otherPlayer) {
     var pieces = this.getOpponentPieces(x, y, player)
 
     for (var i = 0; i < pieces.length; i++) {
@@ -258,4 +276,7 @@ Board.prototype.flip = function(x, y, player) {
         this.board[piece.x][piece.y] = player.color;
     }
     this.board[x][y] = player.color;
+
+    player.qtdPieces += pieces.length + 1;
+    otherPlayer.qtdPieces -= pieces.length;
 }
