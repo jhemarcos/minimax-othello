@@ -71,13 +71,24 @@
             renderBoard(board.board);
 
             currentPlayer = otherPlayer;
-            $(".turn").html("Vez do jogador " + players[currentPlayer].name);
 
             var availableMoves = board.getAllValidMoves(currentPlayer);
             if(!availableMoves.length) {
-                finishGame();
-                return;
+                var availableMovesNextPlayer = board.getAllValidMoves(currentPlayer ? 0 : 1);
+
+                if(!availableMovesNextPlayer.length) {
+                    finishGame();
+                    return;
+                } else {
+                    var noTurnPlayerName = players[currentPlayer].name;
+                    setTimeout(function(){
+                        alert("Jogador " + noTurnPlayerName + " não tem jogadas disponíveis, passando a vez...");
+                    }, 1000);
+                    currentPlayer = currentPlayer ? 0 : 1;
+                }
             }
+
+            $(".turn").html("Vez do jogador " + players[currentPlayer].name);
 
             if(players[currentPlayer].isIa) {
                 setTimeout(function(){
@@ -107,5 +118,3 @@
         startGame();
     });
 })();
-
-

@@ -1,5 +1,5 @@
 function Board(players, existentBoard) {
-    this.size = 4;
+    this.size = 8;
     this.players = players;
   
     this.generateBoard();
