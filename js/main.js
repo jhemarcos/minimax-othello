@@ -92,7 +92,11 @@
 
             if(players[currentPlayer].isIa) {
                 setTimeout(function(){
+                    var t0 = performance.now()
                     var move = players[currentPlayer].getMove(board);
+                    var t1 = performance.now()
+                    console.log("IA process time " + (t1 - t0) + " milliseconds.");
+
                     proccessMove(move.x, move.y);
                 }, 3000);
             }

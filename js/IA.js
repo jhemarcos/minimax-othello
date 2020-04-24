@@ -1,6 +1,6 @@
 function IA(currentPlayer) {
     this.currentPlayer = currentPlayer;
-    this.maxDepth = 3;
+    this.maxDepth = 7;
 }
   
 IA.prototype.move = function(board) {
@@ -64,6 +64,7 @@ IA.prototype.minimax = function(board, depth, currentPlayer, maxDepth, alpha, be
 IA.prototype.doMove = function(board, move, currentPlayer) {
     board.flip(move.x, move.y, currentPlayer);
 }
+
 IA.prototype.mobility = function(board, currentPlayer) {
     var aiMoves = board.getAllValidMoves(currentPlayer).length;
     var oppMoves = board.getAllValidMoves(currentPlayer ? 0 : 1).length;
