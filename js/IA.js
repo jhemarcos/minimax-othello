@@ -1,11 +1,12 @@
 function IA(currentPlayer) {
     this.currentPlayer = currentPlayer;
-    this.maxDepth = 7;
+    this.maxDepth = 5;
 }
   
 IA.prototype.move = function(board) {
     this.visits = 0;
     var res = this.minimax(board, 0, this.currentPlayer, this.maxDepth, -100000, 100000);
+    console.log("Total nodes: " + this.visits);
     return res;
 }
 
